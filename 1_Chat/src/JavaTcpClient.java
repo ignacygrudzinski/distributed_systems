@@ -22,7 +22,9 @@ public class JavaTcpClient {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             // send msg, read response
+            out.println("Jeff");
             out.println("Ping Java Tcp");
+
             String response = in.readLine();
             System.out.println("received response: " + response);
 
