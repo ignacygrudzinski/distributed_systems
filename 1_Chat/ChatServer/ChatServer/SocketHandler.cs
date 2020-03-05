@@ -30,7 +30,11 @@ namespace ChatServer
 
             while (!isNameValid)
             {
-                try { name = input.ReadLine();
+                try {
+
+                    output.WriteLine("SERVER: What's your name?");
+
+                    name = input.ReadLine();
 
                     if (string.IsNullOrWhiteSpace(name))
                     {

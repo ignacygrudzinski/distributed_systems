@@ -17,7 +17,7 @@ namespace ChatServer
 
         public static int Main(String[] args)
         {
-
+            //TODO: move to object properties and yeet the TCP part into another thread
             string address = "127.0.0.1";
             int maxClients = 10;
             int port = 11000;
