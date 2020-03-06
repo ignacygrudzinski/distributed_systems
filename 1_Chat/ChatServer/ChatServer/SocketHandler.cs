@@ -59,9 +59,6 @@ namespace ChatServer
 
             }
 
-            //TODO: move to Server class
-            Console.WriteLine("TCP: client " + name + "\tconnected!");
-
 
             string msg;
 
@@ -75,7 +72,7 @@ namespace ChatServer
                         Cleanup();
                         return;
                     }
-                    else
+                    else if (! string.IsNullOrWhiteSpace(msg))
                     {
                         server.SendToAll(name + ": " + msg);
                     }

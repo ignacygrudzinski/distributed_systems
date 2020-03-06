@@ -32,7 +32,9 @@ public class ChatClient
         textField.addActionListener(e ->
         {
             String text = textField.getText();
-            out.println(text);
+            if (!text.isEmpty()){
+                out.println(text);
+            }
             textField.setText("");
         });
 
@@ -42,13 +44,18 @@ public class ChatClient
     private void run(){
     try(Socket socket = new Socket(this.serverAddress, this.serverPort))
         {
+            in = new Scanner(socket.getInputStream());
+            out = new PrintWriter(socket.getOutputStream(), true);
 
             //Close socket in a civilised manner on exit
             frame.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                     try {
+                        out.println("!q");
                         socket.close();
+                        out.close();
+                        in.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -58,8 +65,6 @@ public class ChatClient
             });
 
             //do
-            in = new Scanner(socket.getInputStream());
-            out = new PrintWriter(socket.getOutputStream(), true);
 
             while (in.hasNextLine())
             {
