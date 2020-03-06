@@ -67,7 +67,11 @@ namespace ChatServer
 
         public bool AddClient(string name, StreamWriter writer)
         {
-            return clients.TryAdd(name, writer);
+            var res = clients.TryAdd(name, writer);
+            if (res)
+                Console.WriteLine("TCP: client " + name + "\tconnected!");
+            return res;
+
 
         }
 

@@ -47,6 +47,7 @@ namespace ChatServer
                     else
                     {
                         isNameValid = true;
+                        server.SendToAll("SERVER: " + name + " connected!");
                     }
 
                 }

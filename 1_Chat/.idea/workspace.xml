@@ -1,27 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c1a16d19-a1f1-4214-b9a7-2358bb5010f7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/../.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_Chat.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/1_Chat/ConnectionTread.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/1_Chat/JavaTcpClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/1_Chat/JavaTcpServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/1_Chat/JavaUdpClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/1_Chat/JavaUdpServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ConnectionTread.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaTcpClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaTcpServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaUdpClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/JavaUdpServer.java" beforeDir="false" />
-    </list>
+    <list default="true" id="c1a16d19-a1f1-4214-b9a7-2358bb5010f7" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,11 +10,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DefaultGradleProjectSettings">
-    <option name="testRunner" value="GRADLE" />
-    <option name="delegatedBuild" value="true" />
+    <option name="isMigrated" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -58,8 +37,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1209" />
-    <option name="y" value="576" />
+    <option name="x" value="238" />
+    <option name="y" value="-9" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -69,8 +48,29 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="1_Chat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="1_Chat" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="1_Chat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="1_Chat" type="462c0819:PsiDirectoryNode" />
+              <item name="ChatClient" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="1_Chat" type="b2602c69:ProjectViewProjectNode" />
+              <item name="1_Chat" type="462c0819:PsiDirectoryNode" />
+              <item name="ChatClient" type="462c0819:PsiDirectoryNode" />
+              <item name="ChatClient" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -151,16 +151,17 @@
       <workItem from="1582721069240" duration="2540000" />
       <workItem from="1583093051283" duration="190000" />
       <workItem from="1583153230317" duration="5031000" />
+      <workItem from="1583443217518" duration="194000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9083000" />
+    <option name="totallyTimeSpent" value="9277000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="585" width="1040" height="754" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13326226" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -195,51 +196,12 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/JavaTcpServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ConnectionTread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/JavaUdpServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/JavaUdpClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="24" column="33" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/JavaTcpClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="20" column="29" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/JavaTcpServer.java" />
+    <entry file="file://$PROJECT_DIR$/src/ConnectionTread.java" />
+    <entry file="file://$PROJECT_DIR$/src/JavaUdpServer.java" />
+    <entry file="file://$PROJECT_DIR$/src/JavaUdpClient.java" />
+    <entry file="file://$PROJECT_DIR$/src/JavaTcpClient.java" />
+    <entry file="file://$PROJECT_DIR$/src/Client.java" />
   </component>
   <component name="masterDetails">
     <states>
