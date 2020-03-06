@@ -10,32 +10,40 @@ public class ChatClient
     private String serverAddress;
     private int serverPort;
 
-    private Scanner in;
-    private PrintWriter out;
+    private Scanner input;
+    private PrintWriter output;
 
-    JFrame frame = new JFrame("Chat");
-    JTextField textField = new JTextField(50);
-    JTextArea messageArea = new JTextArea(16, 50);
+    private JFrame frame = new JFrame("Chat");
+    private JTextArea area = new JTextArea(32, 80);
+    private JTextField field = new JTextField(80);
 
     ChatClient(String serverAddress, int serverPort)
     {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
 
-        textField.setEditable(true);
-        messageArea.setEditable(false);
+        field.setEditable(true);
+        area.setFont(new Font("monospaced", Font.TRUETYPE_FONT, 12));
+        area.setEditable(false);
 
-        frame.getContentPane().add(new JScrollPane(messageArea), BorderLayout.NORTH);
-        frame.getContentPane().add(textField, BorderLayout.SOUTH);
+        frame.getContentPane().add(new JScrollPane(area), BorderLayout.NORTH);
+        frame.getContentPane().add(field, BorderLayout.SOUTH);
         frame.pack();
 
-        textField.addActionListener(e ->
+
+        field.addActionListener(e ->
         {
-            String text = textField.getText();
-            if (!text.isEmpty()){
-                out.println(text);
+            String text = field.getText();
+            if(text.startsWith("!u")){
+                output.print(ASCIIReader.getASCII() + "\r\0");
+                output.flush();
+                text = text.substring(2);
             }
-            textField.setText("");
+            if (!text.isEmpty()){
+                output.println(text);
+                output.flush();
+            }
+            field.setText("");
         });
 
     }
@@ -44,18 +52,18 @@ public class ChatClient
     private void run(){
     try(Socket socket = new Socket(this.serverAddress, this.serverPort))
         {
-            in = new Scanner(socket.getInputStream());
-            out = new PrintWriter(socket.getOutputStream(), true);
+            input = new Scanner(socket.getInputStream());
+            output = new PrintWriter(socket.getOutputStream(), true);
 
-            //Close socket in a civilised manner on exit
+            //Close socket input a civilised manner on exit
             frame.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                     try {
-                        out.println("!q");
+                        output.println("!q");
                         socket.close();
-                        out.close();
-                        in.close();
+                        output.close();
+                        input.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -66,10 +74,10 @@ public class ChatClient
 
             //do
 
-            while (in.hasNextLine())
+            while (input.hasNextLine())
             {
-                String line = in.nextLine();
-                messageArea.append(line + "\n");
+                String line = input.nextLine();
+                area.append(line + "\n");
             }
         }
         catch (IOException e)
