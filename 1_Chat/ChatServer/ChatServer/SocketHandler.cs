@@ -1,37 +1,41 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace ChatServer
 {
     public class SocketHandler
     {
-        private Socket socket;
+        private Socket socketTCP;
+        private Socket socketUDP;
         private Server server;
         private string name;
-        // Data buffer for incoming data.  
-        private byte[] bytes = new Byte[1024];
 
-        public SocketHandler(Socket openConnection, Server server)
+        public SocketHandler(Socket socketTCP, Socket socketUDP, Server server)
         {
-            this.socket = openConnection;
+            this.socketTCP = socketTCP;
+            this.socketUDP = socketUDP;
             this.server = server;
-
         }
 
-        public void start(object state)
+        public void Start(object state)
         {
-            Stream stream = new NetworkStream(socket);
+            Stream stream = new NetworkStream(socketTCP);
             StreamWriter output = new StreamWriter(stream);
             StreamReader input = new StreamReader(stream);
             output.AutoFlush = true;
+
+
 
             bool isNameValid = false;
 
             while (!isNameValid)
             {
-                try {
-
+                try
+                {
+                    //move to an add name function or whatevs
                     output.WriteLine("SERVER: What's your name?");
 
                     name = input.ReadLine();
@@ -47,18 +51,22 @@ namespace ChatServer
                     else
                     {
                         isNameValid = true;
-                        server.SendToAll("SERVER: " + name + " connected!");
                     }
 
                 }
                 catch (IOException)
                 {
-                    socket.Close();
+                    socketTCP.Close();
                     return;
                 }
 
             }
 
+
+            UDPHandler udpChannel = new UDPHandler(socketUDP, server, name, socketTCP
+                .RemoteEndPoint);
+
+            ThreadPool.QueueUserWorkItem(new WaitCallback(udpChannel.Start));
 
             string msg;
 
@@ -72,7 +80,7 @@ namespace ChatServer
                         Cleanup();
                         return;
                     }
-                    else if (! string.IsNullOrWhiteSpace(msg))
+                    else if (!string.IsNullOrWhiteSpace(msg))
                     {
                         server.SendToAll(name + ": " + msg);
                     }
@@ -90,7 +98,7 @@ namespace ChatServer
         private void Cleanup()
         {
             server.RemoveClient(name);
-            socket.Close();
+            socketTCP.Close();
         }
 
 

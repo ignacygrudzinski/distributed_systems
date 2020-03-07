@@ -1,8 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class ChatClient
@@ -12,6 +18,8 @@ public class ChatClient
 
     private Scanner input;
     private PrintWriter output;
+
+    private DatagramSocket socketUDP;
 
     private JFrame frame = new JFrame("Chat");
     private JTextArea area = new JTextArea(32, 80);
@@ -34,12 +42,12 @@ public class ChatClient
         field.addActionListener(e ->
         {
             String text = field.getText();
-            if(text.startsWith("!u")){
-                output.print(ASCIIReader.getASCII() + "\r\0");
-                output.flush();
-                text = text.substring(2);
+            if(text.startsWith("!u ")){
+//                output.print(ASCIIReader.getASCII() + "\r\0");
+//                output.flush();
+                writeToUDP(text.substring(3));
             }
-            if (!text.isEmpty()){
+            else if (!text.isEmpty()){
                 output.println(text);
                 output.flush();
             }
@@ -52,8 +60,13 @@ public class ChatClient
     private void run(){
     try(Socket socket = new Socket(this.serverAddress, this.serverPort))
         {
+
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
+
+            socketUDP = new DatagramSocket();
+            socketUDP.connect(InetAddress.getByName(this.serverAddress), this.serverPort);
+
 
             //Close socket input a civilised manner on exit
             frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -67,12 +80,17 @@ public class ChatClient
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    //debug:
                     System.exit(0);
                 }
             });
 
-            //do
+            Runnable udpchannel = () -> {
+                while (true)
+                    area.append(readFromUDP() + '\n');
+            };
+
+            Thread t = new Thread(udpchannel);
+            t.start();
 
             while (input.hasNextLine())
             {
@@ -87,6 +105,31 @@ public class ChatClient
             frame.setVisible(false);
             frame.dispose();
         }
+    }
+
+    private void writeToUDP(String message) {
+        try {
+            byte[] buffer = (message + "\n\r").getBytes(StandardCharsets.UTF_8);
+            socketUDP.send(new DatagramPacket(buffer, 0, buffer.length));
+        } catch (Exception e) {
+            e.printStackTrace();
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        }
+
+    }
+
+    private String readFromUDP() {
+        try {
+            byte[] buffer = new byte[1024];
+            DatagramPacket packet = new DatagramPacket(buffer, 0, buffer.length);
+            socketUDP.receive(packet);
+            return new String(packet.getData(),
+                    StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            e.printStackTrace();
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        }
+        return "";
     }
 
     public static void main(String[] args)
