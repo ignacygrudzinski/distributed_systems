@@ -66,7 +66,7 @@ namespace ChatServer
             UDPHandler udpChannel = new UDPHandler(socketUDP, server, name, socketTCP
                 .RemoteEndPoint);
 
-            ThreadPool.QueueUserWorkItem(new WaitCallback(udpChannel.Start));
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(udpChannel.Start));
 
             string msg;
 

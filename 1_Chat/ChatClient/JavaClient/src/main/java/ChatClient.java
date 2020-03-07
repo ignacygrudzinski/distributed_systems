@@ -25,13 +25,13 @@ public class ChatClient
     private JTextArea area = new JTextArea(32, 80);
     private JTextField field = new JTextField(80);
 
-    ChatClient(String serverAddress, int serverPort)
+    private ChatClient(String serverAddress, int serverPort)
     {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
 
         field.setEditable(true);
-        area.setFont(new Font("monospaced", Font.TRUETYPE_FONT, 12));
+        area.setFont(new Font("monospaced", Font.PLAIN, 12));
         area.setEditable(false);
 
         frame.getContentPane().add(new JScrollPane(area), BorderLayout.NORTH);
@@ -64,7 +64,7 @@ public class ChatClient
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
 
-            socketUDP = new DatagramSocket();
+            socketUDP = new DatagramSocket(socket.getLocalPort());
             socketUDP.connect(InetAddress.getByName(this.serverAddress), this.serverPort);
 
 

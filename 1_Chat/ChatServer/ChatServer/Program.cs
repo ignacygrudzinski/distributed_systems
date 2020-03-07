@@ -15,6 +15,7 @@ namespace ChatServer
         //private HashSet<string> clientNames { get; set; }
         private ConcurrentDictionary<string, StreamWriter> TCPWriters;
         private ConcurrentDictionary<string, UDPHandler> UDPWriters;
+        private ConcurrentDictionary<EndPoint, string> IPs;
 
 
         public static int Main(String[] args)
@@ -29,7 +30,6 @@ namespace ChatServer
             server.StartServer(address, maxClients, port);
             return 0;
         }
-
 
 
         public void StartServer(string address, int maxClients, int port)
@@ -47,6 +47,7 @@ namespace ChatServer
             Socket UDPsocket = new Socket(ipAddress.AddressFamily,
                 SocketType.Dgram, ProtocolType.Udp);
             UDPsocket.ExclusiveAddressUse = false;
+            ThreadPool.QueueUserWorkItem(new WaitCallback(UDPDeMultiplexer), UDPsocket);
 
             try
             {
@@ -62,7 +63,6 @@ namespace ChatServer
                     // TODO: Refactor handler,make it a method maybe
                     SocketHandler socketHandler = new SocketHandler(openConnection, UDPsocket, this);
                     ThreadPool.QueueUserWorkItem(new WaitCallback(socketHandler.Start));
-
                 }
 
             }
@@ -71,6 +71,21 @@ namespace ChatServer
                 Console.WriteLine(e.ToString());
             }
 
+        }
+
+        public void UDPDeMultiplexer(object socket)
+            //finds out who sent UDP message and sends it further
+        {
+            Socket udpSocket = (Socket)socket;
+            while (true)
+            {
+                byte[] buffer = new byte[1024];
+                EndPoint ep = new IPEndPoint(IPAddress.Any, 0); //this API is swinging  wildly between C and Java sockets and I'm not a fan of that
+                udpSocket.ReceiveFrom(buffer, ref ep);
+                Console.WriteLine(((IPEndPoint)ep).Port);
+                string name = GetNameUDP(ep);
+                SendToAll(name + " [UDP]: " + System.Text.Encoding.UTF8.GetString(buffer));
+            }
         }
 
         public bool AddClient(string name, StreamWriter writer)
@@ -84,18 +99,23 @@ namespace ChatServer
         public bool AddUDPClient(string name, UDPHandler client)
         {
             var res = UDPWriters.TryAdd(name, client);
+            res &= IPs.TryAdd(client.remoteEP, name);
             if (res)
+            {
                 Console.WriteLine("UDP: client " + name + "\tconnected!");
+                Console.WriteLine(((IPEndPoint)client.remoteEP).Port);
+
+            }
             return res;
         }
 
         public bool RemoveClient(string name)
         {
-            StreamWriter writer;
-            bool res = TCPWriters.TryRemove(name, out writer);
-            Console.WriteLine("DISCONNECTED: " + name);
+            bool res = TCPWriters.TryRemove(name, out _);
+            res &= UDPWriters.TryRemove(name, out _);
+            //remove from IPs
+              Console.WriteLine("DISCONNECTED: " + name);
             SendToAll("SERVER: " + name + " disconnected");
-            writer.Dispose();
             return res;
         }
 
@@ -112,7 +132,16 @@ namespace ChatServer
             }
         }
 
-
+        string GetNameUDP(EndPoint remoteEP)
+        {
+            string name;
+            if (!IPs.TryGetValue(remoteEP, out name))
+            {
+                //TODO: honestly no idea what to throw here
+                return "unknown client";
+            }
+            return name;
+        }
 
         public void SendToAllUDP(string message)
         {
@@ -126,6 +155,7 @@ namespace ChatServer
         {
             TCPWriters = new ConcurrentDictionary<string, StreamWriter>();
             UDPWriters = new ConcurrentDictionary<string, UDPHandler>();
+            IPs = new ConcurrentDictionary<EndPoint, string>();
         }
 
     }
