@@ -79,7 +79,7 @@ namespace ChatServer
             Socket udpSocket = (Socket)socket;
             while (true)
             {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[16894];
                 EndPoint ep = new IPEndPoint(IPAddress.Any, 0); //this API is swinging  wildly between C and Java sockets and I'm not a fan of that
                 udpSocket.ReceiveFrom(buffer, ref ep);
                 Console.WriteLine(((IPEndPoint)ep).Port);

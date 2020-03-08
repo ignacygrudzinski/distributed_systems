@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 public class ChatClient
 {
+
     private String serverAddress;
     private int serverPort;
 
@@ -24,6 +25,16 @@ public class ChatClient
     private JFrame frame = new JFrame("Chat");
     private JTextArea area = new JTextArea(32, 80);
     private JTextField field = new JTextField(80);
+
+    public static void main(String[] args)
+    {
+        int serverPort = 11000;
+        String serverAddress = "127.0.0.1";
+        String multicastGroup = "224.2.2.4";
+        ChatClient client = new ChatClient(serverAddress, serverPort);
+        client.frame.setVisible(true);
+        client.run();
+    }
 
     private ChatClient(String serverAddress, int serverPort)
     {
@@ -46,6 +57,12 @@ public class ChatClient
 //                output.print(ASCIIReader.getASCII() + "\r\0");
 //                output.flush();
                 writeToUDP(text.substring(3));
+            }
+            else if (text.startsWith("!q")){
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+            else if (text.startsWith("!a")){
+                writeToUDP(ASCIIReader.getASCII());
             }
             else if (!text.isEmpty()){
                 output.println(text);
@@ -84,12 +101,12 @@ public class ChatClient
                 }
             });
 
-            Runnable udpchannel = () -> {
+            Runnable udpChannel = () -> {
                 while (true)
                     area.append(readFromUDP() + '\n');
             };
 
-            Thread t = new Thread(udpchannel);
+            Thread t = new Thread(udpChannel);
             t.start();
 
             while (input.hasNextLine())
@@ -132,12 +149,4 @@ public class ChatClient
         return "";
     }
 
-    public static void main(String[] args)
-    {
-        int serverPort = 11000;
-        String serverAddress = "127.0.0.1";
-        ChatClient client = new ChatClient(serverAddress, serverPort);
-        client.frame.setVisible(true);
-        client.run();
-    }
 }
