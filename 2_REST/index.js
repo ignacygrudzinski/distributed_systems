@@ -73,9 +73,9 @@ const server = http.createServer();
 server.on('request', async (req, res) => {
     let q = new URL(req.url, 'http://127.0.0.1/')
     console.log(q.pathname);
-    if (q.pathname === '/req/' || q.pathname === '/req') {
+    if (q.searchParams.get('sat_id') != null) {
         let satId = q.searchParams.get('sat_id');
-        if (!satId) {
+        if (satId == '') {
             res.writeHead(400, { 'Content-Type': 'text/html' });
             res.write("<h1>Error 404</h1><br/>Satellite ID not specified!");
             res.end();

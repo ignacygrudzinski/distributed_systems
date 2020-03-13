@@ -7,14 +7,8 @@
     <body>
         <form>
             <label for="sat_id">Satellite id: (25544 - ISS)</label><br>
-            <input type="text" name="sat_id" id="sat_id">
-            <input type="submit" value="Submit" onclick="submit()">
+            <input type="text" name="sat_id" id="sat_id"><br>
+            <input type="submit" value="Submit">
         </form>
-        <script>
-            function submit() {
-                let sat = document.getElementById("sat_id").value;
-                window.location.href = `/req/?sat_id=2137${sat}`;
-            }
-        </script> 
     </body>
 </html> 
