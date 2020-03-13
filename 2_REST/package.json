@@ -1,0 +1,11 @@
+{
+  "name": "dist_syst_request_gist",
+  "version": "1.0.0",
+  "description": "Low level http server accumulating data from multiple open APIs. 100% boneless.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
