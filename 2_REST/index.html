@@ -5,9 +5,19 @@
         <meta charset="UTF-8">
     </head>
     <body>
+        <h2>
+            Enter a NORAD ID of a satellite to learn a couple of facts about what's below it!
+        </h2>
+        <div>
+            Note: language can be left blank and defaults to English. Language code should be recognized by Wikipedia<br/>
+            An improper language code will cause errors. Keep in mind that not all articles are available in all languages, and might also cause errors.
+            Note2: satellites which consistently show "Null island" as their location are either defunct or the provided ID is not valid - the API I used has no way of checking it.
+        </div>
         <form>
             <label for="sat_id">Satellite id: (25544 - ISS)</label><br>
             <input type="text" name="sat_id" id="sat_id"><br>
+            <label for="lang">Language (en if left blank)</label><br>
+            <input type="text" name="lang" id="lang"><br>
             <input type="submit" value="Submit">
         </form>
     </body>

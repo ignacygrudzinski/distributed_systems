@@ -9,11 +9,10 @@ const landing = fs.readFileSync('index.html');
 
 
 const urls = {
-    nasa: 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY',
     N2YO: 'https://www.n2yo.com/rest/v1/satellite/positions/',
     ReverseGeocoding: 'https://api.bigdatacloud.net/data/reverse-geocode-client?',
     wikidata: 'https://www.wikidata.org/w/api.php?action=wbgetentities&format=json&props=sitelinks&ids=',
-    wikipedia: 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles='
+    wikipedia: 'wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles='
 };
 
 function N2YOUrlBuilder(sat_id) {
@@ -33,10 +32,10 @@ function SatelliteHTMLBuilder(satData) {
     `)
 }
 
-function RGeocodingUrlBuilder(satData) {
+function RGeocodingUrlBuilder(satData, lang) {
     let lat = satData.positions[0].satlatitude;
     let lon = satData.positions[0].satlongitude;
-    return `${urls.ReverseGeocoding}latitude=${lat}&longitude=${lon}&localityLanguage=en`;
+    return `${urls.ReverseGeocoding}latitude=${lat}&longitude=${lon}&localityLanguage=${lang}`;
 }
 
 function InfoElementHTMLBuilder(el) {
@@ -45,17 +44,17 @@ function InfoElementHTMLBuilder(el) {
     `;
 }
 
-function WikidataUrlBuilder(wikidataID) {
-    return `${urls.wikidata}${wikidataID}&sitefilter=enwiki`;
+function WikidataUrlBuilder(wikidataID, lang) {
+    return `${urls.wikidata}${wikidataID}&sitefilter=${lang}wiki`;
 }
 
-function WikipediaUrlBuilder(wikidataData) {
+function WikipediaUrlBuilder(wikidataData, lang) {
     let Q = Object.values(wikidataData.entities);
     let sitelinks = Q[0].sitelinks;
     let site = Object.values(sitelinks)[0];
     let wikipediaName = site.title;
     let name = encodeURIComponent(wikipediaName.trim())
-    return `${urls.wikipedia}${name}`;
+    return `https://${lang}.${urls.wikipedia}${name}`;
 }
 
 function WikipediaHTMLBuilder(wikiEntry) {
@@ -80,6 +79,9 @@ server.on('request', async (req, res) => {
             res.write("<h1>Error 404</h1><br/>Satellite ID not specified!");
             res.end();
         } else {
+            let lang = q.searchParams.get('lang');
+            lang = lang || 'en';
+            console.log(lang);
             res.writeHead(200, { 'Content-Type': 'text/html' });
             //handle satelite data
             res.write('<meta charset="UTF-8">');
@@ -87,7 +89,7 @@ server.on('request', async (req, res) => {
             res.write(SatelliteHTMLBuilder(satData));
 
             //handle reverse geocoding data
-            const loc_data = await getApiData(RGeocodingUrlBuilder(satData));
+            const loc_data = await getApiData(RGeocodingUrlBuilder(satData, lang));
             if (loc_data.localityInfo.administrative != undefined) {
                 res.write('<h2>Administrative info:</h2><ul>');
                 loc_data.localityInfo.administrative.forEach(el => {
@@ -100,12 +102,16 @@ server.on('request', async (req, res) => {
                 res.write('<h2>Informative info:</h2><ul>');
                 await asyncForEach(loc_data.localityInfo.informative, async el => {
                     res.write(InfoElementHTMLBuilder(el));
-                    if(el.wikidataId){
-                        //handle getting wikipedia name
-                        const wikidataData = await getApiData(WikidataUrlBuilder(el.wikidataId));
-                        //handle getting wikipedia description
-                        const wikipediaParagraph = await getApiData(WikipediaUrlBuilder(wikidataData));
-                        res.write(WikipediaHTMLBuilder(wikipediaParagraph));
+                    try{
+                        if(el.wikidataId){
+                            //handle getting wikipedia name
+                            const wikidataData = await getApiData(WikidataUrlBuilder(el.wikidataId, lang));
+                            //handle getting wikipedia description
+                            const wikipediaParagraph = await getApiData(WikipediaUrlBuilder(wikidataData, lang));
+                            res.write(WikipediaHTMLBuilder(wikipediaParagraph));
+                        }
+                    }catch(error){
+                        res.write("Error connecting to Wikipedia. Possible cause: unsupported language");
                     }
                 })
                 res.write('</ul>');
